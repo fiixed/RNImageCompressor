@@ -1,11 +1,11 @@
-import {Text, View} from 'react-native';
+import {FC} from 'react';
 
-const App = () => {
-  return (
-    <View>
-      <Text>Hello RN Developers</Text>
-    </View>
-  );
+import Home from './app/screens/Home';
+
+interface Props {}
+
+const App: FC<Props> = (): JSX.Element => {
+  return <Home />;
 };
 
 export default App;

@@ -1,15 +1,11 @@
 import {FC} from 'react';
-import {StyleSheet, Text, View, PermissionsAndroid} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import LargeIconButton from '../components/LargeIconButton';
 
 interface Props {}
 const Home: FC<Props> = (): JSX.Element => {
-  const handleImageCapture = async (): Promise<void> => {
-    console.log('====================================');
-    console.log('test');
-    console.log('====================================');
-  };
+  const handleImageCapture = async (): Promise<void> => {};
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>

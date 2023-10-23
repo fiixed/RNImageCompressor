@@ -1,25 +1,36 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-trailing-spaces */
 import {FC} from 'react';
-import {StyleSheet, Text, View, PermissionsAndroid} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ImagePicker from 'react-native-image-crop-picker';
+import {NavigationProp} from '@react-navigation/native';
 
 import LargeIconButton from '../components/LargeIconButton';
-import { requestCameraPermission, selectAndCropImageFromCamera, selectAndCropImageFromDevice } from '../utils/imageSelector';
+import {
+  selectAndCropImageFromCamera,
+  selectAndCropImageFromDevice,
+} from '../utils/imageSelector';
+import {RootStackParamList} from '../navigation/AppNavigator';
 
-interface Props {}
-const Home: FC<Props> = (): JSX.Element => {
+interface Props {
+  navigation: NavigationProp<RootStackParamList>;
+}
+const Home: FC<Props> = ({navigation}): JSX.Element => {
+  const navigateToImageEditor = (uri: string): void => {
+    navigation.navigate('ImageEditor', {imageUri: uri});
+  };
+
   const handleImageCapture = async (): Promise<void> => {
-    const { path, error } = await selectAndCropImageFromCamera();
+    const {path, error} = await selectAndCropImageFromCamera();
     if (error) return console.log(error);
-    console.log(path);
+    navigateToImageEditor(path);
   };
 
   const handleImageSelection = async (): Promise<void> => {
     const {path, error} = await selectAndCropImageFromDevice();
     if (error) return console.log(error);
-    console.log(path);
+    navigateToImageEditor(path);
   };
 
   return (

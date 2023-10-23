@@ -15,8 +15,6 @@ export const requestCameraPermission = async (): Promise<void> => {
       },
     );
 
-    console.log(granted);
-
     const {NEVER_ASK_AGAIN, DENIED} = PermissionsAndroid.RESULTS;
     if (granted === NEVER_ASK_AGAIN)
       return Alert.alert(

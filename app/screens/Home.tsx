@@ -1,11 +1,37 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-trailing-spaces */
 import {FC} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, PermissionsAndroid} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import LargeIconButton from '../components/LargeIconButton';
 
 interface Props {}
 const Home: FC<Props> = (): JSX.Element => {
-  const handleImageCapture = async (): Promise<void> => {};
+
+  const handleImageCapture = async (): Promise<void> => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'Camera Permission',
+          message:
+            'RNImageCompressor needs access to your camera',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the camera');
+      } else {
+        console.log('Camera permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+    
+  };
+  
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>

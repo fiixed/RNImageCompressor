@@ -6,21 +6,20 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import ImagePicker from 'react-native-image-crop-picker';
 
 import LargeIconButton from '../components/LargeIconButton';
-import { requestCameraPermission } from '../utils/helper';
+import { requestCameraPermission, selectAndCropImageFromCamera, selectAndCropImageFromDevice } from '../utils/imageSelector';
 
 interface Props {}
 const Home: FC<Props> = (): JSX.Element => {
   const handleImageCapture = async (): Promise<void> => {
-    try {
-      await requestCameraPermission();
-      // open the camera
-      const {path} = await ImagePicker.openCamera({
-        width: 413,
-        height: 531,
-        cropping: true,
-      });
-      console.log(path);
-    } catch (error) {}
+    const { path, error } = await selectAndCropImageFromCamera();
+    if (error) return console.log(error);
+    console.log(path);
+  };
+
+  const handleImageSelection = async (): Promise<void> => {
+    const {path, error} = await selectAndCropImageFromDevice();
+    if (error) return console.log(error);
+    console.log(path);
   };
 
   return (
@@ -37,7 +36,7 @@ const Home: FC<Props> = (): JSX.Element => {
         <Icon name="camera" />
       </LargeIconButton>
       {/* Image Select Button */}
-      <LargeIconButton title="Select">
+      <LargeIconButton onPress={handleImageSelection} title="Select">
         <Icon name="folder-open" />
       </LargeIconButton>
     </View>

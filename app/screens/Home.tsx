@@ -3,35 +3,26 @@
 import {FC} from 'react';
 import {StyleSheet, Text, View, PermissionsAndroid} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import ImagePicker from 'react-native-image-crop-picker';
+
 import LargeIconButton from '../components/LargeIconButton';
+import { requestCameraPermission } from '../utils/helper';
 
 interface Props {}
 const Home: FC<Props> = (): JSX.Element => {
-
   const handleImageCapture = async (): Promise<void> => {
     try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-        {
-          title: 'Camera Permission',
-          message:
-            'RNImageCompressor needs access to your camera',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You can use the camera');
-      } else {
-        console.log('Camera permission denied');
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-    
+      await requestCameraPermission();
+      // open the camera
+      const {path} = await ImagePicker.openCamera({
+        width: 413,
+        height: 531,
+        cropping: true,
+      });
+      console.log(path);
+    } catch (error) {}
   };
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>

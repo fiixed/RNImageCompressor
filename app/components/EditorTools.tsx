@@ -32,9 +32,6 @@ const EditorTools: FC<Props> = ({
       </View>
       <View style={styles.sliderContainer}>
         <Slider
-          style={{width: 200, height: 40}}
-          minimumValue={0}
-          maximumValue={1}
           minimumTrackTintColor="rgb(108, 154, 222)"
           maximumTrackTintColor="rgb(108, 154, 222, 0.8)"
           thumbTintColor="rgb(108, 154, 222)"

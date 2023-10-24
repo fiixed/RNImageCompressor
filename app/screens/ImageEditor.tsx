@@ -11,6 +11,7 @@ import {
   selectAndCropImageFromCamera,
   selectAndCropImageFromDevice,
 } from '../utils/imageSelector';
+import ConfirmModal from '../components/ConfirmModal';
 
 type RouteProps = StackScreenProps<RootStackParamList, 'ImageEditor'>;
 
@@ -20,6 +21,7 @@ interface Props {
 
 const ImageEditor: FC<Props> = ({route}): JSX.Element => {
   const [selectedImage, setSelectedImage] = useState<string>('');
+  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const {imageUri} = route.params;
 
   const handleCaptureAnotherImage = async (): Promise<void> => {
@@ -35,7 +37,7 @@ const ImageEditor: FC<Props> = ({route}): JSX.Element => {
     setSelectedImage(path);
   };
   return (
-    <View style={styles.container}></View>
+    <View style={styles.container}>
       <ImageEditorHeader />
       <BackgroundImageEditor />
       <View style={styles.imageContainer}>
@@ -44,6 +46,11 @@ const ImageEditor: FC<Props> = ({route}): JSX.Element => {
       <EditorTools
         onCaptureAnother={handleCaptureAnotherImage}
         onSelectAnother={handleSelectAnotherImage}
+      />
+      <ConfirmModal
+        visible={showConfirmModal}
+        title="Are you sure!"
+        message="Are you sure because this action will discard all your changes."
       />
     </View>
   );

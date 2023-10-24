@@ -6,6 +6,7 @@ import {RootStackParamList} from '../navigation/AppNavigator';
 import ImageEditorHeader from '../components/ImageEditorHeader';
 import BackgroundImageEditor from '../components/BackgroundImageEditor';
 import SelectedImage from '../components/SelectedImage';
+import EditorTools from '../components/EditorTools';
 
 type RouteProps = StackScreenProps<RootStackParamList, 'ImageEditor'>;
 
@@ -22,6 +23,7 @@ const ImageEditor: FC<Props> = ({route}): JSX.Element => {
       <View style={styles.imageContainer}>
         <SelectedImage uri={imageUri} />
       </View>
+      <EditorTools />
     </View>
   );
 };

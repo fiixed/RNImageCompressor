@@ -3,14 +3,28 @@ import {StyleSheet, Text, View} from 'react-native';
 import SelectorButton from './SelectorButton';
 import Slider from '@react-native-community/slider';
 
-interface Props {}
+interface Props {
+  onSelectAnother?: () => void;
+  onCaptureAnother?: () => void;
+}
 
-const EditorTools: FC<Props> = (): JSX.Element => {
+const EditorTools: FC<Props> = ({
+  onSelectAnother,
+  onCaptureAnother,
+}): JSX.Element => {
   return (
     <View style={styles.container}>
       <View style={styles.btnContainer}>
-        <SelectorButton name="folder-open" title="Select Another" />
-        <SelectorButton name="camera" title="Capture Another" />
+        <SelectorButton
+          onPress={onSelectAnother}
+          name="folder-open"
+          title="Select Another"
+        />
+        <SelectorButton
+          onPress={onCaptureAnother}
+          name="camera"
+          title="Capture Another"
+        />
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Compressed to: 50%</Text>
@@ -54,7 +68,7 @@ const styles = StyleSheet.create({
   },
   sliderContainer: {
     paddingVertical: 10,
-  }
+  },
 });
 
 export default EditorTools;

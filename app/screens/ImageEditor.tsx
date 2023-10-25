@@ -1,7 +1,13 @@
 /* eslint-disable prettier/prettier */
-import {FC, useState} from 'react';
+import {FC, useState, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
+import {
+  EventListenerCallback,
+  EventMapBase,
+  NavigationProp,
+  useNavigation,
+} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation/AppNavigator';
 import ImageEditorHeader from '../components/ImageEditorHeader';
 import BackgroundImageEditor from '../components/BackgroundImageEditor';
@@ -19,10 +25,15 @@ interface Props {
   route: RouteProps['route'];
 }
 
+let canGoBack = false;
 const ImageEditor: FC<Props> = ({route}): JSX.Element => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [selectedImage, setSelectedImage] = useState<string>('');
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const {imageUri} = route.params;
+
+  const displayConfirmModal = (): void => setShowConfirmModal(true);
+  const hideConfirmModal = (): void => setShowConfirmModal(false);
 
   const handleCaptureAnotherImage = async (): Promise<void> => {
     const {path, error} = await selectAndCropImageFromCamera();
@@ -36,6 +47,30 @@ const ImageEditor: FC<Props> = ({route}): JSX.Element => {
 
     setSelectedImage(path);
   };
+
+ const preventBack = (e: any) => {
+   if (canGoBack) return;
+
+   e.preventDefault();
+   displayConfirmModal();
+ };
+
+ // Handling Back Press Manually
+ const handleMoveToBackScreen = (): void => {
+   canGoBack = true;
+   setShowConfirmModal(false);
+   navigation.goBack();
+ };
+
+ // Handling the back press
+ useEffect(() => {
+   navigation.addListener('beforeRemove', preventBack);
+   return () => {
+     navigation.removeListener('beforeRemove', preventBack);
+     canGoBack = false;
+   };
+ }, [canGoBack]);
+
   return (
     <View style={styles.container}>
       <ImageEditorHeader />
@@ -51,6 +86,8 @@ const ImageEditor: FC<Props> = ({route}): JSX.Element => {
         visible={showConfirmModal}
         title="Are you sure!"
         message="Are you sure because this action will discard all your changes."
+        onCancelPress={hideConfirmModal}
+        onDiscardPress={handleMoveToBackScreen}
       />
     </View>
   );

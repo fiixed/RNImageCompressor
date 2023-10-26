@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-trailing-spaces */
 import {FC} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, NativeModules} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ImagePicker from 'react-native-image-crop-picker';
 import {NavigationProp} from '@react-navigation/native';
@@ -12,10 +12,14 @@ import {
   selectAndCropImageFromDevice,
 } from '../utils/imageSelector';
 import {RootStackParamList} from '../navigation/AppNavigator';
+import fsModule from '../modules/fsModule';
 
 interface Props {
   navigation: NavigationProp<RootStackParamList>;
 }
+
+
+
 const Home: FC<Props> = ({navigation}): JSX.Element => {
   const navigateToImageEditor = (uri: string): void => {
     navigation.navigate('ImageEditor', {imageUri: uri});
@@ -33,10 +37,19 @@ const Home: FC<Props> = ({navigation}): JSX.Element => {
     navigateToImageEditor(path);
   };
 
+  // const handleOnPress = async (): Promise<void> => {
+  //   try {
+  //     const message = await fsModule.justGreetMe('Andrew');
+  //     console.log(message);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Choose Your Image</Text>
+        <Text  style={styles.title}>Choose Your Image</Text>
         <Text style={styles.secondaryText}>
           You can select your image using one of these option which you want to
           convert to passport size.

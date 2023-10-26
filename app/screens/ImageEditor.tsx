@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import {FC, useState, useEffect} from 'react';
+import {FC, useState, useEffect, useCallback} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {
@@ -18,6 +18,7 @@ import {
   selectAndCropImageFromDevice,
 } from '../utils/imageSelector';
 import ConfirmModal from '../components/ConfirmModal';
+import fsModule from '../modules/fsModule';
 
 type RouteProps = StackScreenProps<RootStackParamList, 'ImageEditor'>;
 
@@ -55,6 +56,12 @@ const ImageEditor: FC<Props> = ({route}): JSX.Element => {
    displayConfirmModal();
  };
 
+ const getImageSize = async (): Promise<void> => {
+   const uri: string = imageUri.split('file:///')[1];
+   const size = await fsModule.getSize(uri);
+   console.log(size);
+ };
+
  // Handling Back Press Manually
  const handleMoveToBackScreen = (): void => {
    canGoBack = true;
@@ -70,6 +77,10 @@ const ImageEditor: FC<Props> = ({route}): JSX.Element => {
      canGoBack = false;
    };
  }, [canGoBack]);
+
+ useEffect(() => {
+   getImageSize();
+ }, []);
 
   return (
     <View style={styles.container}>

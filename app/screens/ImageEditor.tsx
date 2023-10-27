@@ -96,19 +96,17 @@ const ImageEditor: FC<Props> = ({route}): JSX.Element => {
   const handleImageSave = async (): Promise<void> => {
     try {
       const name = `pp-${Date.now()}`;
+      const desiredCompressValue: number = Math.floor(compressValue * 100);
       const uri: string = compressedImage.split('file:///')[1];
       const res = await fsModule.saveImageToDevice(
         uri,
         name,
-        compressValue,
+        desiredCompressValue,
       );
       console.log(res);
     } catch (error) {
       console.log(error);
-      
     }
-    
-    
   };
 
   // Handling Back Press Manually

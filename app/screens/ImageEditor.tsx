@@ -70,9 +70,12 @@ const ImageEditor: FC<Props> = ({route}): JSX.Element => {
   // compressing image
   const handleImageCompress = async (value: number): Promise<void> => {
     const compressValue: number = Math.floor(value * 100);
-    const uri: string = imageUri.split('file:///')[1];
+    const uri: string = selectedImage.split('file:///')[1];
 
     const res = await fsModule.compressImage(uri, compressValue);
+    setSelectedImage(`file:///${res.uri}`);
+
+    setFileSize(convertSizeInKb(res.size));
     setCompressedPercentage(Math.round(value * 100));
   };
 
@@ -95,8 +98,11 @@ const ImageEditor: FC<Props> = ({route}): JSX.Element => {
   }, [canGoBack]);
 
   useEffect(() => {
-    getImageSize();
-  }, []);
+    if (imageUri && !selectedImage) {
+      setSelectedImage(imageUri);
+      getImageSize();
+    }
+  }, [imageUri]);
 
   return (
     <View style={styles.container}>

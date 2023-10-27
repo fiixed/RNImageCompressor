@@ -62,7 +62,7 @@ public class FSModule extends ReactContextBaseJavaModule {
             // {size: size, uri: outputFile}
             WritableMap result = Arguments.createMap();
             result.putString("uri", String.valueOf(outputFile));
-            result.putInt("key", size);
+            result.putInt("size", size);
 
             promise.resolve(result);
 

@@ -3,6 +3,7 @@ package com.rnimagecompressor;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 
 import androidx.annotation.NonNull;
 
@@ -71,5 +72,31 @@ public class FSModule extends ReactContextBaseJavaModule {
             promise.reject(e);
         }
 
+    }
+
+    @ReactMethod
+    public void saveImageToDevice(String uri, String imageName, int compressValue, Promise promise) {
+        try {
+            // get the user public directory for images
+            File publicImageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+
+            // creating new folder
+            publicImageDirectory = new File(publicImageDirectory + "/Passport Size Photo");
+            if (!publicImageDirectory.exists()) {
+                publicImageDirectory.mkdir();
+            }
+
+            fos = new FileOutputStream(publicImageDirectory + "/" + imageName + ".jpg");
+
+            Bitmap bitmap = BitmapFactory.decodeFile(new File(uri).getAbsolutePath());
+            bitmap.compress(Bitmap.CompressFormat.JPEG, compressValue, fos);
+
+            fos.close();
+
+            promise.resolve("Done");
+            
+        } catch (Exception e) {
+            promise.reject(e);
+        }
     }
 }

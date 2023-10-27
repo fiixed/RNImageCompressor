@@ -93,6 +93,24 @@ const ImageEditor: FC<Props> = ({route}): JSX.Element => {
     setCompressedPercentage(Math.round(value * 100));
   };
 
+  const handleImageSave = async (): Promise<void> => {
+    try {
+      const name = `pp-${Date.now()}`;
+      const uri: string = compressedImage.split('file:///')[1];
+      const res = await fsModule.saveImageToDevice(
+        uri,
+        name,
+        compressValue,
+      );
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      
+    }
+    
+    
+  };
+
   // Handling Back Press Manually
   const handleMoveToBackScreen = (): void => {
     canGoBack = true;
@@ -120,7 +138,7 @@ const ImageEditor: FC<Props> = ({route}): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <ImageEditorHeader />
+      <ImageEditorHeader onSavePress={handleImageSave} />
       <BackgroundImageEditor />
       <View style={styles.imageContainer}>
         <SelectedImage uri={compressedImage || selectedImage}>

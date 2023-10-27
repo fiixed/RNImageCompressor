@@ -9,6 +9,11 @@ interface FSModuleInterface {
     uri: string,
     compressValue: number,
   ): Promise<{uri: string; size: number}>;
+  saveImageToDevice(
+    imageUri: string,
+    imageName: string,
+    compressValue: number,
+  ): Promise<string>;
 }
 
 export default fsModule as FSModuleInterface;

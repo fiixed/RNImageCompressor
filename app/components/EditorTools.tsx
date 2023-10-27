@@ -4,13 +4,23 @@ import SelectorButton from './SelectorButton';
 import Slider from '@react-native-community/slider';
 
 interface Props {
+  fileSize?: number;
+  compressValue?: number;
+  compressedPercentage?: number;
   onSelectAnother?: () => void;
   onCaptureAnother?: () => void;
+  onSliderChange?: (value: number) => void;
+  onSlidingComplete?: (value: number) => void;
 }
 
 const EditorTools: FC<Props> = ({
+  fileSize,
+  compressValue,
+  compressedPercentage,
   onSelectAnother,
   onCaptureAnother,
+  onSliderChange,
+  onSlidingComplete,
 }): JSX.Element => {
   return (
     <View style={styles.container}>
@@ -27,14 +37,19 @@ const EditorTools: FC<Props> = ({
         />
       </View>
       <View style={styles.infoContainer}>
-        <Text style={styles.label}>Compressed to: 50%</Text>
-        <Text style={styles.label}>Image size: 50kb</Text>
+        <Text style={styles.label}>Compressed to: {compressedPercentage}%</Text>
+        <Text style={styles.label}>Image size: {fileSize}KB</Text>
       </View>
       <View style={styles.sliderContainer}>
         <Slider
+          minimumValue={0.1}
+          maximumValue={1}
+          value={compressValue}
           minimumTrackTintColor="rgb(108, 154, 222)"
           maximumTrackTintColor="rgb(108, 154, 222, 0.8)"
           thumbTintColor="rgb(108, 154, 222)"
+          onValueChange={onSliderChange}
+          onSlidingComplete={onSlidingComplete}
         />
       </View>
     </View>

@@ -4,11 +4,13 @@ import React, {FC} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
 import UtilityButtons from './UtilityButtons';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
-interface Props {}
+interface Props {
+  onSavePress?: () => void;
+}
 
-const ImageEditorHeader: FC<Props> = (): JSX.Element => {
+const ImageEditorHeader: FC<Props> = ({onSavePress}): JSX.Element => {
   const navigation = useNavigation();
 
   return (
@@ -18,7 +20,7 @@ const ImageEditorHeader: FC<Props> = (): JSX.Element => {
 
       {/* Save button */}
       <View>
-        <UtilityButtons name="file-download" />
+        <UtilityButtons name="file-download" onPress={onSavePress} />
         <Text style={styles.btnTitle}>Save</Text>
       </View>
     </View>

@@ -5,7 +5,10 @@ interface Props {
   uri: string;
 }
 
-const SelectedImage: FC<Props> = ({uri}): JSX.Element => {
+const SelectedImage: FC<Props> = ({uri}): JSX.Element | null => {
+  if (!uri) {
+    return null;
+  }
   return (
     <View style={styles.container}>
       <Image source={{uri: uri}} style={styles.image} />

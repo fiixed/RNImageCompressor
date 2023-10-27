@@ -20,6 +20,7 @@ import {
 import ConfirmModal from '../components/ConfirmModal';
 import fsModule from '../modules/fsModule';
 import {convertSizeInKb} from '../utils/helper';
+import BusyLoading from '../components/BusyLoading';
 
 type RouteProps = StackScreenProps<RootStackParamList, 'ImageEditor'>;
 
@@ -34,6 +35,7 @@ const ImageEditor: FC<Props> = ({route}): JSX.Element => {
   const [selectedImage, setSelectedImage] = useState<string>('');
   const [compressedImage, setCompressedImage] = useState<string>('');
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+  const [busy, setBusy] = useState<boolean>(false);
   const [fileSize, setFileSize] = useState<number>(0);
   const [compressValue, setCompressValue] = useState<number>(1);
   const [compressedPercentage, setCompressedPercentage] = useState<number>(100);
@@ -82,7 +84,9 @@ const ImageEditor: FC<Props> = ({route}): JSX.Element => {
     const compressValue: number = Math.floor(value * 100);
     const uri: string = selectedImage.split('file:///')[1];
 
+    setBusy(true);
     const res = await fsModule.compressImage(uri, compressValue);
+    setBusy(false);
     setCompressedImage(`file:///${res.uri}`);
 
     setFileSize(convertSizeInKb(res.size));
@@ -119,7 +123,9 @@ const ImageEditor: FC<Props> = ({route}): JSX.Element => {
       <ImageEditorHeader />
       <BackgroundImageEditor />
       <View style={styles.imageContainer}>
-        <SelectedImage uri={compressedImage || selectedImage} />
+        <SelectedImage uri={compressedImage || selectedImage}>
+          {busy && <BusyLoading visible={busy} />}
+        </SelectedImage>
       </View>
       <EditorTools
         compressValue={compressValue}

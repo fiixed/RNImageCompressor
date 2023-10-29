@@ -15,18 +15,18 @@ export const requestCameraPermission = async (): Promise<void> => {
       },
     );
 
-    const {NEVER_ASK_AGAIN, DENIED} = PermissionsAndroid.RESULTS;
-    if (granted === NEVER_ASK_AGAIN)
-      return Alert.alert(
-        'Failed to open camera',
-        "It's looks like you have disabled the camera permission for this app! Please change the setting first.",
-      );
+    // const {NEVER_ASK_AGAIN, DENIED} = PermissionsAndroid.RESULTS;
+    // if (granted === NEVER_ASK_AGAIN)
+    //   return Alert.alert(
+    //     'Failed to open camera',
+    //     "It's looks like you have disabled the camera permission for this app! Please change the setting first.",
+    //   );
 
-    if (granted === DENIED)
-      return Alert.alert(
-        'Failed to open camera',
-        'Sorry but to use this feature you have to accept the CAMERA PERMISSION!',
-      );
+    // if (granted === DENIED)
+    //   return Alert.alert(
+    //     'Failed to open camera',
+    //     'Sorry but to use this feature you have to accept the CAMERA PERMISSION!',
+    //   );
   } catch (error) {
     console.log('Fail to open camera, error inside camera permission', error);
   }
@@ -59,7 +59,7 @@ export const selectAndCropImageFromDevice = async (
   height: number = 531,
 ): Promise<imageResultType> => {
   try {
-    await requestCameraPermission();
+    // await requestCameraPermission();
     // open the picker (gallery)
     const {path} = await ImagePicker.openPicker({
       width,

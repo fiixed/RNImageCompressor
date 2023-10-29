@@ -19,9 +19,10 @@ import {
 } from '../utils/imageSelector';
 import ConfirmModal from '../components/ConfirmModal';
 import fsModule from '../modules/fsModule';
-import {convertSizeInKb} from '../utils/helper';
+import {convertSizeInKb, takeReadAndWritePermissions} from '../utils/helper';
 import BusyLoading from '../components/BusyLoading';
 import DoneLottie from '../components/DoneLottie';
+import PermissionWarning from '../components/PermissionWarning';
 
 type RouteProps = StackScreenProps<RootStackParamList, 'ImageEditor'>;
 
@@ -38,6 +39,8 @@ const ImageEditor: FC<Props> = ({route}): JSX.Element => {
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [busy, setBusy] = useState<boolean>(false);
   const [processFinished, setProcessFinished] = useState<boolean>(false);
+  const [showPermissionWarning, setShowPermissionWarning] =
+    useState<boolean>(false);
   const [fileSize, setFileSize] = useState<number>(0);
   const [compressValue, setCompressValue] = useState<number>(1);
   const [compressedPercentage, setCompressedPercentage] = useState<number>(100);
@@ -95,8 +98,18 @@ const ImageEditor: FC<Props> = ({route}): JSX.Element => {
     setCompressedPercentage(Math.round(value * 100));
   };
 
+  const checkForPermissions = async (): Promise<void> => {
+    const isGranted = await takeReadAndWritePermissions();
+    if (!isGranted) {
+      return setShowPermissionWarning(true);
+    }
+  };
+
   const handleImageSave = async (): Promise<void> => {
+    //return await takeReadAndWritePermissions();
+
     try {
+      await checkForPermissions();
       const name = `pp-${Date.now()}`;
       const desiredCompressValue: number = Math.floor(compressValue * 100);
       const uri: string = compressedImage.split('file:///')[1];
@@ -168,8 +181,17 @@ const ImageEditor: FC<Props> = ({route}): JSX.Element => {
         visible={showConfirmModal}
         title="Are you sure!"
         message="Are you sure because this action will discard all your changes."
-        onCancelPress={hideConfirmModal}
-        onDiscardPress={handleMoveToBackScreen}
+        primaryBtnTitle="Cancel"
+        dangerBtnTitle="Discard"
+        onPrimaryBtnPress={hideConfirmModal}
+        onDangerBtnPress={handleMoveToBackScreen}
+      />
+
+      <PermissionWarning
+        visible={showConfirmModal}
+        title="Required File Write Permission"
+        message="This app needs file write permission to work, please accept"
+        onClose={() => setShowPermissionWarning(false)}
       />
     </View>
   );

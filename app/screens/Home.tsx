@@ -1,34 +1,49 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-trailing-spaces */
-import {FC} from 'react';
-import {StyleSheet, Text, View, NativeModules} from 'react-native';
+import {FC, useState} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import ImagePicker from 'react-native-image-crop-picker';
+
 import {NavigationProp} from '@react-navigation/native';
 
 import LargeIconButton from '../components/LargeIconButton';
+import {checkCameraPermission} from '../utils/helper';
 import {
   selectAndCropImageFromCamera,
   selectAndCropImageFromDevice,
 } from '../utils/imageSelector';
 import {RootStackParamList} from '../navigation/AppNavigator';
-import fsModule from '../modules/fsModule';
+
+import PermissionWarning from '../components/PermissionWarning';
 
 interface Props {
   navigation: NavigationProp<RootStackParamList>;
 }
 
-
-
 const Home: FC<Props> = ({navigation}): JSX.Element => {
+  const [showPermissionInfoAlert, setShowPermissionInfoAlert] =
+    useState<boolean>(false);
+
   const navigateToImageEditor = (uri: string): void => {
     navigation.navigate('ImageEditor', {imageUri: uri});
   };
 
   const handleImageCapture = async (): Promise<void> => {
     const {path, error} = await selectAndCropImageFromCamera();
-    if (error) return console.log(error);
-    navigateToImageEditor(path);
+    if (error) {
+      await checkCameraPermission();
+    }
+
+    if (error) {
+      const isGranted: boolean = await checkCameraPermission();
+      if (!isGranted) {
+        return setShowPermissionInfoAlert(true);
+      }
+    }
+
+    if (path) {
+      navigateToImageEditor(path);
+    }
   };
 
   const handleImageSelection = async (): Promise<void> => {
@@ -49,7 +64,7 @@ const Home: FC<Props> = ({navigation}): JSX.Element => {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text  style={styles.title}>Choose Your Image</Text>
+        <Text style={styles.title}>Choose Your Image</Text>
         <Text style={styles.secondaryText}>
           You can select your image using one of these option which you want to
           convert to passport size.
@@ -63,6 +78,12 @@ const Home: FC<Props> = ({navigation}): JSX.Element => {
       <LargeIconButton onPress={handleImageSelection} title="Select">
         <Icon name="folder-open" />
       </LargeIconButton>
+      <PermissionWarning
+        title="Required Camera Permission"
+        message="This app requires camera permission to work, please accept"
+        visible={false}
+        onClose={() => setShowPermissionInfoAlert(false)}
+      />
     </View>
   );
 };

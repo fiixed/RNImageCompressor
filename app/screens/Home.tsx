@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-trailing-spaces */
 import {FC, useState} from 'react';
-import {StyleSheet, Text, View, NativeModules, Linking} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import ImagePicker from 'react-native-image-crop-picker';
+
 import {NavigationProp} from '@react-navigation/native';
 
 import LargeIconButton from '../components/LargeIconButton';
@@ -13,8 +13,8 @@ import {
   selectAndCropImageFromDevice,
 } from '../utils/imageSelector';
 import {RootStackParamList} from '../navigation/AppNavigator';
-import fsModule from '../modules/fsModule';
-import ConfirmModal from '../components/ConfirmModal';
+
+import PermissionWarning from '../components/PermissionWarning';
 
 interface Props {
   navigation: NavigationProp<RootStackParamList>;
@@ -61,11 +61,6 @@ const Home: FC<Props> = ({navigation}): JSX.Element => {
   //   }
   // };
 
-  const handleOpenSettings = (): void => {
-    setShowPermissionInfoAlert(false);
-    Linking.openSettings();
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -83,14 +78,11 @@ const Home: FC<Props> = ({navigation}): JSX.Element => {
       <LargeIconButton onPress={handleImageSelection} title="Select">
         <Icon name="folder-open" />
       </LargeIconButton>
-      <ConfirmModal
-        visible={showPermissionInfoAlert}
-        primaryBtnTitle="Open Settings"
-        dangerBtnTitle="I Will Not!"
+      <PermissionWarning
         title="Required Camera Permission"
-        message="This app is heavily best on camera so you have to accept the permission!"
-        onDangerBtnPress={() => setShowPermissionInfoAlert(false)}
-        onPrimaryBtnPress={handleOpenSettings}
+        message="This app requires camera permission to work, please accept"
+        visible={false}
+        onClose={() => setShowPermissionInfoAlert(false)}
       />
     </View>
   );

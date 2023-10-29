@@ -22,6 +22,7 @@ import fsModule from '../modules/fsModule';
 import {convertSizeInKb, takeReadAndWritePermissions} from '../utils/helper';
 import BusyLoading from '../components/BusyLoading';
 import DoneLottie from '../components/DoneLottie';
+import PermissionWarning from '../components/PermissionWarning';
 
 type RouteProps = StackScreenProps<RootStackParamList, 'ImageEditor'>;
 
@@ -185,7 +186,13 @@ const ImageEditor: FC<Props> = ({route}): JSX.Element => {
         onPrimaryBtnPress={hideConfirmModal}
         onDangerBtnPress={handleMoveToBackScreen}
       />
-      
+
+      <PermissionWarning
+        visible={showConfirmModal}
+        title="Required File Write Permission"
+        message="This app needs file write permission to work, please accept"
+        onClose={() => setShowPermissionWarning(false)}
+      />
     </View>
   );
 };
